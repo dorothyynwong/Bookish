@@ -23,6 +23,16 @@ public class HomeController : Controller
         return View();
     }
 
+    public IActionResult Author()
+    {
+        Author author1 = new Author {
+            Id = 1,
+            FirstName = "John",
+            Surname = "Smith"
+        };
+        return View(author1);
+    }
+
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {
