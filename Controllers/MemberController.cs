@@ -5,7 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Bookish.Controllers;
 
-public class MemberController : Controller {
+public class MemberController : Controller
+{
     private readonly ILogger<MemberController> _logger;
     private BookishContext _context;
 
@@ -15,7 +16,8 @@ public class MemberController : Controller {
         _context = context;
     }
 
-    public async Task<IActionResult> Index() {
+    public async Task<IActionResult> Index()
+    {
         var members = await _context.Members.ToListAsync();
         if (members == null)
         {
@@ -26,15 +28,45 @@ public class MemberController : Controller {
 
     public async Task<IActionResult> Create([Bind("FirstName", "Surname", "Address", "Email", "PhoneNumber")] Member member)
     {
-    if (!ModelState.IsValid)
-    {
-        return View();
-    }
-    
-    await _context.Members.AddAsync(member);
+        if (!ModelState.IsValid)
+        {
+            return View();
+        }
 
-    await _context.SaveChangesAsync();
-    
-    return RedirectToAction("Index", "Member");   
+        await _context.Members.AddAsync(member);
+
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction("Index", "Member");
+    }
+
+    public async Task<IActionResult> Edit(string id)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View();
+        }
+
+        Member member = await _context.Members.FindAsync(int.Parse(id));
+        
+        return View(member);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Edit(string id, [Bind("Id", "FirstName", "Surname", "Address", "Email", "PhoneNumber")] Member member)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View();
+        }
+
+        // Member editMember = await _context.Members.FindAsync(int.Parse(id));
+
+        //  _context.Attach(editMember).State = EntityState.Modified;
+        _context.Update(member);
+
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction("Index", "Member");
     }
 }
