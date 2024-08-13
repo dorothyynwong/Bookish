@@ -1,0 +1,10 @@
+@model Bookish.Models.Member;
+
+<form asp-action="Create">
+First Name: <input asp-for="FirstName" type="text" />
+Surname: <input asp-for="Surname" type="text" />
+Address: <input asp-for="Address" type="text" />
+Email: <input asp-for="Email" type="email" />
+Phone Number: <input asp-for="PhoneNumber" type="tel" />
+<input type="submit" value="Create"/>
+</form>

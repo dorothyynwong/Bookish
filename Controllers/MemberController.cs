@@ -23,4 +23,18 @@ public class MemberController : Controller {
         }
         return View(members);
     }
+
+    public async Task<IActionResult> Create([Bind("FirstName", "Surname", "Address", "Email", "PhoneNumber")] Member member)
+    {
+    if (!ModelState.IsValid)
+    {
+        return View();
+    }
+    
+    await _context.Members.AddAsync(member);
+
+    await _context.SaveChangesAsync();
+    
+    return RedirectToAction("Index", "Member");   
+    }
 }
