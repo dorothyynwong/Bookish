@@ -20,9 +20,6 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<BookishContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-    // options.UseNpgsql(builder.Configuration.GetConnectionString("BookishContext")));
-    // options.UseNpgsql(@"Server=localhost;Port=5432;Database=bookish;User Id=bookish;Password=bookish;"));
-    // options.UseSqlite(builder.Configuration.GetConnectionString("MvcMovieContext")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
