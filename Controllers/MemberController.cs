@@ -5,22 +5,22 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Bookish.Controllers;
 
-public class BookController : Controller {
-    private readonly ILogger<BookController> _logger;
+public class MemberController : Controller {
+    private readonly ILogger<MemberController> _logger;
     private BookishContext _context;
 
-    public BookController(ILogger<BookController> logger, BookishContext context)
+    public MemberController(ILogger<MemberController> logger, BookishContext context)
     {
         _logger = logger;
         _context = context;
     }
 
     public async Task<IActionResult> Index() {
-        var books = await _context.Books.ToListAsync();
-        if (books == null)
+        var members = await _context.Members.ToListAsync();
+        if (members == null)
         {
             return NotFound();
         }
-        return View(books);
+        return View(members);
     }
 }

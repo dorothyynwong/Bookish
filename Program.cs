@@ -17,8 +17,25 @@ using Microsoft.EntityFrameworkCore;
 //     }
 // }
 
-
 var builder = WebApplication.CreateBuilder(args);
+
+// using (var context = new BookishContext())
+// {
+//     context.Database.EnsureCreated();
+//     var book1 = new Book() {};
+//     context.Books.Add(book1);
+//     context.SaveChanges();
+//     foreach (var a in context.Books) {
+//         Console.WriteLine($"ISBN: {a.ISBN}, Book name: {a.BookName}, Copies available: {a.AvailableCopies}");
+//     }
+// }
+
+using (var context = new BookishContext())
+{
+    context.Database.EnsureCreated();
+}
+
+
 builder.Services.AddDbContext<BookishContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Add services to the container.
