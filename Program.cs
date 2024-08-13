@@ -19,29 +19,18 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// using (var context = new BookishContext())
-// {
-//     context.Database.EnsureCreated();
-//     var book1 = new Book() {};
-//     context.Books.Add(book1);
-//     context.SaveChanges();
-//     foreach (var a in context.Books) {
-//         Console.WriteLine($"ISBN: {a.ISBN}, Book name: {a.BookName}, Copies available: {a.AvailableCopies}");
-//     }
-// }
-
-using (var context = new BookishContext())
-{
-    context.Database.EnsureCreated();
-}
-
-
-builder.Services.AddDbContext<BookishContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+// builder.Services.AddDbContext<BookishContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<BookishContext>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
+using (var context = new BookishContext())
+{
+    context.Database.EnsureCreated();
+}
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
