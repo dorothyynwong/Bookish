@@ -104,12 +104,47 @@ namespace Bookish.Services
                         AvailableCopies = book.AvailableCopies,
                         Genre = book.Genre
                     };
+                    return bookAuthor;
 
                 } else return null;
 
             }
             else return null;
         }
+
+        public async Task<List<BookAuthorModel>?> GetBookAuthorByGenre(string genre)
+        {
+            List<BookAuthorModel> bookAuthorList = [];
+            var books = await _context.Books
+                                      .Where(book => book.Genre == genre)
+                                      .OrderBy(book => book.Genre)
+                                      .ToListAsync();
+
+            foreach (Book book in books)
+            {
+                Author? author = await _context.Authors.FindAsync(book.AuthorId);
+                if (author != null && book != null)
+                {
+                    BookAuthorModel? bookAuthor = new()
+                    {
+                        Id = book.Id,
+                        ISBN = book.ISBN,
+                        BookName = book.BookName,
+                        AuthorId = book.AuthorId,
+                        AuthorFirstName = author.FirstName,
+                        AuthorSurname = author.Surname,
+                        NumberOfCopies = book.NumberOfCopies,
+                        AvailableCopies = book.AvailableCopies,
+                        Genre = book.Genre
+                    };
+                    bookAuthorList.Add(bookAuthor);
+
+                }
+            }
+
+            return bookAuthorList;
+        }
+   
 
     }
 

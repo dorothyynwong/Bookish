@@ -34,4 +34,13 @@ public class BookController(BookishContext context) : Controller {
 
         return RedirectToAction("Index", "Book");
     }
+
+    public async Task<IActionResult> BookList(string genre) {
+        var bookAuthorList = await _service.GetBookAuthorByGenre(genre);
+        if (bookAuthorList == null)
+        {
+            return NotFound();
+        }
+        return View(bookAuthorList);
+    }
 }
