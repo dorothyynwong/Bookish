@@ -71,6 +71,7 @@ namespace Bookish.Services
 
             Book book = new()
             {
+                Id = bookAuthor.Id,
                 ISBN = bookAuthor.ISBN,
                 BookName = bookAuthor.BookName,
                 AuthorId = authorId,
