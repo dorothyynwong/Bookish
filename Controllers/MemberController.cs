@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Bookish.Models;
+using Bookish.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bookish.Controllers;
@@ -10,10 +11,13 @@ public class MemberController : Controller
     private readonly ILogger<MemberController> _logger;
     private BookishContext _context;
 
+    private MemberService _service;
+
     public MemberController(ILogger<MemberController> logger, BookishContext context)
     {
         _logger = logger;
         _context = context;
+        _service = new MemberService(context);
     }
 
     public async Task<IActionResult> Index()
@@ -33,9 +37,11 @@ public class MemberController : Controller
             return View();
         }
 
-        await _context.Members.AddAsync(member);
+        await _service.AddMember(member);
 
-        await _context.SaveChangesAsync();
+        // await _context.Members.AddAsync(member);
+
+        // await _context.SaveChangesAsync();
 
         return RedirectToAction("Index", "Member");
     }
