@@ -117,7 +117,7 @@ namespace Bookish.Services
             List<BookAuthorModel> bookAuthorList = [];
             var books = await _context.Books
                                       .Where(book => book.Genre == genre)
-                                      .OrderBy(book => book.Genre)
+                                      .OrderBy(book => book.BookName)
                                       .ToListAsync();
 
             foreach (Book book in books)

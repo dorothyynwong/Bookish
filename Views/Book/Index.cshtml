@@ -1,4 +1,4 @@
-@model List<Bookish.Models.Book>;
+@model List<Bookish.ViewModels.BookAuthorModel>;
 
 @{
     ViewData["Title"] = "Book Catalogue";
@@ -9,11 +9,10 @@
     {
         <p>@book.BookName</p>
         <p>@book.ISBN</p>
-        <p>@book.AuthorId</p>
+        <p>@book.AuthorFirstName @book.AuthorSurname</p>
         <p>@book.NumberOfCopies</p>
         <p>@book.AvailableCopies</p>
         <p>@book.Genre</p>
     }
 </div>
-
 

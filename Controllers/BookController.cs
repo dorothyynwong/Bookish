@@ -14,14 +14,14 @@ public class BookController(BookishContext context) : Controller {
 
     // public BookController(ILogger<BookController> logger, BookishContext context)
 
-    public async Task<IActionResult> Index() {
-        var books = await _context.Books.ToListAsync();
-        if (books == null)
-        {
-            return NotFound();
-        }
-        return View(books);
-    }
+    // public async Task<IActionResult> Index() {
+    //     var books = await _context.Books.ToListAsync();
+    //     if (books == null)
+    //     {
+    //         return NotFound();
+    //     }
+    //     return View(books);
+    // }
 
     public async Task<IActionResult> Create([Bind("ISBN","BookName", "AuthorFirstName", "AuthorSurname", "NumberOfCopies", "AvailableCopies", "Genre")] BookAuthorModel bookAuthor)
     {
@@ -35,12 +35,21 @@ public class BookController(BookishContext context) : Controller {
         return RedirectToAction("Index", "Book");
     }
 
-    public async Task<IActionResult> BookList(string genre) {
+    public async Task<IActionResult> Index(string genre) {
         var bookAuthorList = await _service.GetBookAuthorByGenre(genre);
         if (bookAuthorList == null)
         {
             return NotFound();
         }
         return View(bookAuthorList);
+    }
+
+    public async Task<IActionResult> Details(string id) {
+        var bookAuthor = await _service.GetBookAuthorById(id);
+        if (bookAuthor == null)
+        {
+            return NotFound();
+        }
+        return View(bookAuthor);
     }
 }
