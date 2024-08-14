@@ -14,28 +14,25 @@ namespace Bookish.Services
             
             if (authorId == 0)
             {
-                Author author = new Author
-                        {
-                            FirstName = bookAuthor.AuthorFirstName,
-                            Surname = bookAuthor.AuthorSurname
-                        }; 
+                Author author = new()
+                {
+                    FirstName = bookAuthor.AuthorFirstName,
+                    Surname = bookAuthor.AuthorSurname
+                };
                 authorId = await AddAuthor(author);    
-            } 
-            
-            Book book = new Book 
-                        {
-                            ISBN = bookAuthor.ISBN,
-                            BookName = bookAuthor.BookName,
-                            AuthorId = authorId,
-                            NumberOfCopies = bookAuthor.NumberOfCopies,
-                            AvailableCopies = bookAuthor.AvailableCopies,
-                            Genre = bookAuthor.Genre
-                        };
+            }
+
+            Book book = new()
+            {
+                ISBN = bookAuthor.ISBN,
+                BookName = bookAuthor.BookName,
+                AuthorId = authorId,
+                NumberOfCopies = bookAuthor.NumberOfCopies,
+                AvailableCopies = bookAuthor.AvailableCopies,
+                Genre = bookAuthor.Genre
+            };
 
             await AddBook(book);
-
-
-            // await AddAuthor(author);
         }
 
         public async Task AddBook(Book book)
@@ -53,7 +50,8 @@ namespace Bookish.Services
 
         public async Task<int> GetAuthorIdByName(string firstName, string surname)
         {
-            Author? author = await _context.Authors.FirstOrDefaultAsync(author => author.FirstName == firstName && author.Surname == surname);
+            Author? author = await _context.Authors.FirstOrDefaultAsync(author =>
+                            author.FirstName == firstName && author.Surname == surname);
             return author!=null ? author.Id : 0;
         }
     }

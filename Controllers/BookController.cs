@@ -9,7 +9,7 @@ namespace Bookish.Controllers;
 
 public class BookController(BookishContext context) : Controller {
     // private readonly ILogger<BookController> _logger;
-    private BookishContext _context = context;
+    private readonly BookishContext _context = context;
     private readonly BookService _service = new(context);
 
     // public BookController(ILogger<BookController> logger, BookishContext context)
