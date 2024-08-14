@@ -6,19 +6,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Bookish.Controllers;
 
-public class MemberController : Controller
+// public class MemberController(ILogger<MemberController> logger, BookishContext context) : Controller
+public class MemberController(BookishContext context) : Controller
 {
-    private readonly ILogger<MemberController> _logger;
-    private BookishContext _context;
+    // private readonly ILogger<MemberController> _logger = logger;
+    private readonly BookishContext _context = context;
 
-    private MemberService _service;
-
-    public MemberController(ILogger<MemberController> logger, BookishContext context)
-    {
-        _logger = logger;
-        _context = context;
-        _service = new MemberService(context);
-    }
+    private readonly MemberService _service = new(context);
 
     public async Task<IActionResult> Index()
     {
@@ -39,10 +33,6 @@ public class MemberController : Controller
 
         await _service.AddMember(member);
 
-        // await _context.Members.AddAsync(member);
-
-        // await _context.SaveChangesAsync();
-
         return RedirectToAction("Index", "Member");
     }
 
@@ -52,27 +42,27 @@ public class MemberController : Controller
         {
             return View();
         }
-
-        Member member = await _context.Members.FindAsync(int.Parse(id));
         
-        return View(member);
+        Member? member = await _service.GetMemberById(id);
+        if (member == null)
+        {
+            return NotFound();
+        }
+        else
+        {
+            return View(member);
+        }
     }
 
     [HttpPost]
-    public async Task<IActionResult> Edit(string id, [Bind("Id", "FirstName", "Surname", "Address", "Email", "PhoneNumber")] Member member)
+    public async Task<IActionResult> Edit([Bind("Id", "FirstName", "Surname", "Address", "Email", "PhoneNumber")] Member member)
     {
         if (!ModelState.IsValid)
         {
             return View();
         }
-
-        // Member editMember = await _context.Members.FindAsync(int.Parse(id));
-
-        //  _context.Attach(editMember).State = EntityState.Modified;
-        _context.Update(member);
-
-        await _context.SaveChangesAsync();
-
+        await _service.UpdateMember(member);
+        
         return RedirectToAction("Index", "Member");
     }
 }
