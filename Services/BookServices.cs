@@ -54,6 +54,63 @@ namespace Bookish.Services
                             author.FirstName == firstName && author.Surname == surname);
             return author!=null ? author.Id : 0;
         }
+
+        public async Task UpdateBook(BookAuthorModel bookAuthor)
+        {
+            int authorId = await GetAuthorIdByName(bookAuthor.AuthorFirstName, bookAuthor.AuthorSurname);
+            
+            if (authorId == 0)
+            {
+                Author author = new()
+                {
+                    FirstName = bookAuthor.AuthorFirstName,
+                    Surname = bookAuthor.AuthorSurname
+                };
+                authorId = await AddAuthor(author);    
+            }
+
+            Book book = new()
+            {
+                ISBN = bookAuthor.ISBN,
+                BookName = bookAuthor.BookName,
+                AuthorId = authorId,
+                NumberOfCopies = bookAuthor.NumberOfCopies,
+                AvailableCopies = bookAuthor.AvailableCopies,
+                Genre = bookAuthor.Genre
+            };
+
+            _context.Update(book);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<BookAuthorModel?> GetBookAuthorById(string id)
+        {
+            if (int.TryParse(id, out int idNo))
+            {
+                Book? book = await _context.Books.FindAsync(idNo);
+                Author? author = await _context.Authors.FindAsync(book.AuthorId);
+                if (author != null && book != null)
+                {
+                    BookAuthorModel? bookAuthor = new()
+                    {
+                        Id = book.Id,
+                        ISBN = book.ISBN,
+                        BookName = book.BookName,
+                        AuthorId = book.AuthorId,
+                        AuthorFirstName = author.FirstName,
+                        AuthorSurname = author.Surname,
+                        NumberOfCopies = book.NumberOfCopies,
+                        AvailableCopies = book.AvailableCopies,
+                        Genre = book.Genre
+                    };
+
+                } else return null;
+
+            }
+            else return null;
+        }
+
     }
 
     
