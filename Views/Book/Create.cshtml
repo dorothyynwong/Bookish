@@ -1,0 +1,12 @@
+@model Bookish.ViewModels.BookAuthorModel;
+
+<form asp-action="Create">
+ISBN: <input asp-for="ISBN" type="text" />
+Book Name: <input asp-for="BookName" type="text" />
+Author First Name: <input asp-for="AuthorFirstName" type="text" />
+Author Surname: <input asp-for="AuthorSurname" type="text" />
+Number of Copies: <input asp-for="NumberOfCopies" type="number" />
+Copies available: <input asp-for="AvailableCopies" type="number" />
+Genre: <input asp-for="Genre" type="text" />
+<input type="submit" value="Create"/>
+</form>
