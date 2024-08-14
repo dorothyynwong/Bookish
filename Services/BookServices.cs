@@ -116,6 +116,8 @@ namespace Bookish.Services
         public async Task<List<BookAuthorModel>?> FilterBooks(string? filterType, string? filterValue)
         {
             List<BookAuthorModel> bookAuthorList = [];
+            List<Book> bookList = [];
+            List<Author> authorList = [];
             IQueryable<Book> query = _context.Books; // SELECT * FROM Books;  
             switch(filterType)
             {
@@ -125,6 +127,18 @@ namespace Bookish.Services
                 case "bookname":
                     query = query.Where(book => book.BookName.ToLower() == filterValue); // WHERE Genre = "Fantasy"
                     break;
+                case "author":
+                    query = authorList.AsQueryable().Join(bookList, 
+                        author => author, 
+                        book => book.AuthorId, 
+                        (author, book) => new {author.Id = book.AuthorId, book = book.BookName});
+                    break;
+
+                //  var query = people.AsQueryable().Join(pets,
+                //     person => person,
+                //     pet => pet.Owner,
+                //     (person, pet) =>
+                //         new { OwnerName = person.Name, Pet = pet.Name });  
                 default:
                     break;
 
