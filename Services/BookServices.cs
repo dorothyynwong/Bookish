@@ -113,13 +113,25 @@ namespace Bookish.Services
             else return null;
         }
 
-        public async Task<List<BookAuthorModel>?> GetBookAuthorByGenre(string genre)
+        public async Task<List<BookAuthorModel>?> FilterBooks(string? filterType, string? filterValue)
         {
             List<BookAuthorModel> bookAuthorList = [];
-            var books = await _context.Books
-                                      .Where(book => book.Genre == genre)
-                                      .OrderBy(book => book.BookName)
-                                      .ToListAsync();
+            IQueryable<Book> query = _context.Books; // SELECT * FROM Books;  
+            switch(filterType)
+            {
+                case "genre":
+                    query = query.Where(book => book.Genre.ToLower() == filterValue); // WHERE Genre = "Fantasy"
+                    break;
+                case "bookname":
+                    query = query.Where(book => book.BookName.ToLower() == filterValue); // WHERE Genre = "Fantasy"
+                    break;
+                default:
+                    break;
+
+            }
+
+            query = query.OrderBy(book => book.BookName); // ORDER BY BookName
+            var books = await query.ToListAsync();
 
             foreach (Book book in books)
             {

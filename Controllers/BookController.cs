@@ -35,8 +35,15 @@ public class BookController(BookishContext context) : Controller {
         return RedirectToAction("Index", "Book");
     }
 
-    public async Task<IActionResult> Index(string genre) {
-        var bookAuthorList = await _service.GetBookAuthorByGenre(genre);
+    public async Task<IActionResult> Index(string filterType="", string filterValue="") {
+        if (filterType != null && filterValue !=null)
+        {
+            filterType = filterType.ToLower();
+            filterValue = filterValue.ToLower();
+        }
+
+        var bookAuthorList = await _service.FilterBooks(filterType, filterValue);
+        
         if (bookAuthorList == null)
         {
             return NotFound();
