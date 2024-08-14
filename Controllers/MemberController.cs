@@ -65,4 +65,14 @@ public class MemberController(BookishContext context) : Controller
         
         return RedirectToAction("Index", "Member");
     }
+
+    public async Task<IActionResult> Details(string id)
+    {
+        var member = await _service.GetMemberById(id);
+        if (member == null)
+        {
+            return NotFound();
+        }
+        return View(member);
+    }
 }
