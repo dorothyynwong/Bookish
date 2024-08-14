@@ -128,7 +128,6 @@ namespace Bookish.Services
                     query = query.Where(book => book.BookName.ToLower() == filterValue); // WHERE Genre = "Fantasy"
                     break;
                 case "author": //IQueryable Methods
-                    int.TryParse(filterValue, out int idNo);
                     var authorQuery = _context.Books.Join(_context.Authors,
                         book => book.AuthorId,
                         author => author.Id,
@@ -144,21 +143,14 @@ namespace Bookish.Services
                             AvailableCopies = book.AvailableCopies,
                             Genre = book.Genre
                         })
-                        .Where(book => book.AuthorId == idNo)
+                        .Where(book => book.AuthorFirstName == filterValue)
                         .OrderBy(book => book.BookName);
                         return await authorQuery.ToListAsync();
                     // break;
-
-                //  var query = people.AsQueryable().Join(pets,
-                //     person => person,
-                //     pet => pet.Owner,
-                //     (person, pet) =>
-                //         new { OwnerName = person.Name, Pet = pet.Name }); 
                 case "authortest": //LINQ
-                    int.TryParse(filterValue, out int authoridNo);
                 	var bookAuthors = await (from book in _context.Books
 					   join author in _context.Authors on book.AuthorId equals author.Id
-					   where author.Id == authoridNo
+					   where author.FirstName == filterValue
 					   select new BookAuthorModel{
                             Id = book.Id,
                             ISBN = book.ISBN,
