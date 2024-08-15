@@ -195,7 +195,10 @@ namespace Bookish.Services
 
             return bookAuthorList;
         }
-   
+    public async Task<Book?> GetBookByBookId(int id)
+    {
+            return await _context.Books.FindAsync(id);
+    }
 
     }
 

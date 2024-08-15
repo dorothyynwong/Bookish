@@ -13,6 +13,7 @@ namespace Bookish.Models
             int MemberId = 0;
             DateTime DateBorrowed = DateTime.Now;
             int NumberOfTimeRenewed = 0;
+            bool IsReturned = false; 
         }
 
         [Key]
@@ -29,5 +30,7 @@ namespace Bookish.Models
         public DateTime DateBorrowed {get; set;}
 
         public int NumberOfTimeRenewed { get; set; }
+
+        public bool IsReturned { get; set; }
     }
 }

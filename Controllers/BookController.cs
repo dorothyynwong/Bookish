@@ -1,7 +1,4 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Bookish.Models;
-using Microsoft.EntityFrameworkCore;
 using Bookish.ViewModels;
 using Bookish.Services;
 
