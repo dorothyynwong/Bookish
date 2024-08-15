@@ -55,6 +55,31 @@ namespace Bookish.Services
             return author!=null ? author.Id : 0;
         }
 
+        public async Task<Book> UpdateBookCopy(int id, bool checkOut)
+        {
+
+            Book? book = await GetBookByBookId(id);
+            if (checkOut)
+            {
+                if (book.AvailableCopies > 0)
+                {
+                    book.AvailableCopies--;
+                }
+            }
+            else
+            {
+                if (book.AvailableCopies < book.NumberOfCopies)
+                {
+                    book.AvailableCopies++;
+                }
+            }
+
+            _context.Books.Update(book);
+            await _context.SaveChangesAsync();
+            return book;
+
+        }
+
         public async Task UpdateBook(BookAuthorModel bookAuthor)
         {
             int authorId = await GetAuthorIdByName(bookAuthor.AuthorFirstName, bookAuthor.AuthorSurname);

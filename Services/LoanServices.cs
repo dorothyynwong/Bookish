@@ -118,4 +118,34 @@ public class LoanServices(BookishContext context)
         }
         return loanMemberList;
     }
-}
+
+    public async Task<LoanMemberModel> CheckOut(int memberId, int bookId)
+    { // 1. Add loan record (member Id, book Id)
+    // 2. Update book record
+        Loan loan = new Loan{
+            BookId = bookId,
+            MemberId = memberId,
+            DateBorrowed = DateTime.Now,
+            NumberOfTimeRenewed = 0,
+            IsReturned = false
+        };
+        await AddLoan(loan);
+
+        Book book = await _bookservice.UpdateBookCopy(bookId, true);
+        Member member = await _memberservice.GetMemberById(memberId.ToString());
+
+        LoanMemberModel loanMember = new LoanMemberModel {
+                Id = loan.Id,
+                DateBorrowed = loan.DateBorrowed,
+                NumberOfTimeRenewed = loan.NumberOfTimeRenewed,
+                IsReturned = loan.IsReturned,
+                MemberId = memberId,
+                MemberFirstName = member.FirstName,
+                MemberSurname = member.Surname,
+                MemberEmail = member.Email
+        };
+
+        return loanMember;
+        
+    }
+} 
