@@ -9,7 +9,7 @@ public class LoanController(BookishContext context) : Controller {
     private readonly BookishContext _context = context;
     private readonly LoanServices _service = new(context);
 
-    public async Task<IActionResult> LoansOfMember(string id) 
+    public async Task<IActionResult> BooksBorrowed(string id) 
     {
         var loanBookList = await _service.GetLoanBookByMemberId(id);
         if (loanBookList== null)
@@ -19,5 +19,14 @@ public class LoanController(BookishContext context) : Controller {
         return View(loanBookList);
     }
 
+    public async Task<IActionResult> MembersLoaned(string id) 
+    {
+        var loanMemberList = await _service.GetLoanMemberByBookId(id);
+        if (loanMemberList== null)
+        {
+            return NotFound();
+        }
+        return View(loanMemberList);
+    }
 
 }
