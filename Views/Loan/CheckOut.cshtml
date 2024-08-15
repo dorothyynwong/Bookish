@@ -1,0 +1,14 @@
+@model Bookish.Models.Loan;
+
+@{
+    ViewData["Title"] = "Check Out Book";
+}
+
+<div class="text-center">
+        <form asp-action="CheckOut">
+        Member Id: <input asp-for="MemberId" type="number" />
+        Book Id: <input asp-for="BookId" type="number" />
+        <input type="submit" value="CheckOut"/>
+        </form>
+</div>
+
