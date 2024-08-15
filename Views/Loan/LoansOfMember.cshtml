@@ -1,0 +1,19 @@
+@model List<Bookish.ViewModels.LoanBookModel>;
+
+@{
+    ViewData["Title"] = "Loans of a Member";
+}
+
+<div class="text-center">
+    @foreach(var loanBook in Model)
+    {
+        <p>@loanBook.BookId</p>
+        <p>@loanBook.ISBN</p>
+        <p>@loanBook.BookName</p>
+        <p>@loanBook.NumberOfCopies</p>
+        <p>@loanBook.AvailableCopies</p>
+        <p>@loanBook.DateBorrowed</p>
+        <p>@loanBook.NumberOfTimeRenewed</p>
+        <p>@loanBook.IsReturned</p>
+    }
+</div>
