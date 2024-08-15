@@ -35,7 +35,10 @@ public class BookController(BookishContext context) : Controller {
         return RedirectToAction("Index", "Book");
     }
 
-    public async Task<IActionResult> Index(string filterType="", string filterValue="") {
+    public async Task<IActionResult> Index(string filterType="", string filterValue="") 
+    {
+        ViewData["BookFilter"] = filterValue;
+
         if (filterType != null && filterValue !=null)
         {
             filterType = filterType.ToLower();

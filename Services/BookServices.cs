@@ -116,8 +116,6 @@ namespace Bookish.Services
         public async Task<List<BookAuthorModel>?> FilterBooks(string? filterType, string? filterValue)
         {
             List<BookAuthorModel> bookAuthorList = [];
-            // List<Book> bookList = [];
-            // List<Author> authorList = [];
             IQueryable<Book> query = _context.Books; // SELECT * FROM Books;  
             switch(filterType)
             {
@@ -125,9 +123,9 @@ namespace Bookish.Services
                     query = query.Where(book => book.Genre.ToLower() == filterValue); // WHERE Genre = "Fantasy"
                     break;
                 case "bookname":
-                    query = query.Where(book => book.BookName.ToLower() == filterValue); // WHERE Genre = "Fantasy"
+                    query = query.Where(book => book.BookName.ToLower().Contains(filterValue!=null?filterValue:"")); // WHERE Genre = "Fantasy"
                     break;
-                case "author": //IQueryable Methods
+                case "author": //LINQ Methods
                     var authorQuery = _context.Books.Join(_context.Authors,
                         book => book.AuthorId,
                         author => author.Id,
@@ -143,29 +141,28 @@ namespace Bookish.Services
                             AvailableCopies = book.AvailableCopies,
                             Genre = book.Genre
                         })
-                        .Where(book => book.AuthorFirstName == filterValue)
+                        .Where(book => (book.AuthorFirstName.ToLower()+" "+book.AuthorSurname.ToLower()).Contains(filterValue!=null?filterValue:""))
                         .OrderBy(book => book.BookName);
                         return await authorQuery.ToListAsync();
-                    // break;
-                case "authortest": //LINQ
-                	var bookAuthors = await (from book in _context.Books
-					   join author in _context.Authors on book.AuthorId equals author.Id
-					   where author.FirstName == filterValue
-					   select new BookAuthorModel{
-                            Id = book.Id,
-                            ISBN = book.ISBN,
-                            BookName = book.BookName,
-                            AuthorId = book.AuthorId,
-                            AuthorFirstName = author.FirstName,
-                            AuthorSurname = author.Surname,
-                            NumberOfCopies = book.NumberOfCopies,
-                            AvailableCopies = book.AvailableCopies,
-                            Genre = book.Genre
-                       })
-					  .AsNoTracking()
-					  .ToListAsync(); 
+                // case "authortest": //LINQ Query
+                // 	var bookAuthors = await (from book in _context.Books
+				// 	   join author in _context.Authors on book.AuthorId equals author.Id
+				// 	   where author.FirstName == filterValue
+				// 	   select new BookAuthorModel{
+                //             Id = book.Id,
+                //             ISBN = book.ISBN,
+                //             BookName = book.BookName,
+                //             AuthorId = book.AuthorId,
+                //             AuthorFirstName = author.FirstName,
+                //             AuthorSurname = author.Surname,
+                //             NumberOfCopies = book.NumberOfCopies,
+                //             AvailableCopies = book.AvailableCopies,
+                //             Genre = book.Genre
+                //        })
+				// 	  .AsNoTracking()
+				// 	  .ToListAsync(); 
                     
-                    return bookAuthors;
+                //     return bookAuthors;
                 default:
                     break;
 

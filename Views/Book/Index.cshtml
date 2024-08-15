@@ -5,6 +5,19 @@
 }
 
 <div class="text-center">
+    <form asp-action="Index" method="get">
+        <div class="form-actions no-color">
+            <p>
+                Search By Genre: <input type="radio" name="filterType" value="genre"> </br>
+                Search By Book Name: <input type="radio" name="filterType" value="bookname"> </br>
+                Search By Author: <input type="radio" name="filterType" value="author"></br>
+                Search: <input type = "text" name="filterValue" value="@ViewData["BookFilter"]" />
+                <input type="submit" value="Search" />
+                <a asp-action="Index">Back to Full List</a> 
+            </p>
+        </div>
+    </form>
+
     @foreach(var book in Model)
     {
         <p>@book.BookName</p>
