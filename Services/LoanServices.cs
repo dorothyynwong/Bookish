@@ -62,7 +62,7 @@ public class LoanServices(BookishContext context)
                 BookName = book.BookName,
                 NumberOfCopies = book.NumberOfCopies,
                 AvailableCopies = book.AvailableCopies,
-                DateBorrowed = loan.DateBorrowed,
+                DateBorrowed = loan.DateBorrowed.ToUniversalTime(),
                 NumberOfTimeRenewed = loan.NumberOfTimeRenewed,
                 IsReturned = loan.IsReturned
             };
@@ -106,7 +106,7 @@ public class LoanServices(BookishContext context)
             Member? member = await _memberservice.GetMemberById(loan.MemberId.ToString());
             LoanMemberModel loanMember = new LoanMemberModel{
                 Id = loan.Id,
-                DateBorrowed = loan.DateBorrowed,
+                DateBorrowed = loan.DateBorrowed.ToUniversalTime(),
                 NumberOfTimeRenewed = loan.NumberOfTimeRenewed,
                 IsReturned = loan.IsReturned,
                 MemberId = member.Id,
@@ -125,7 +125,7 @@ public class LoanServices(BookishContext context)
         Loan loan = new Loan{
             BookId = bookId,
             MemberId = memberId,
-            DateBorrowed = DateTime.Now,
+            DateBorrowed = DateTime.Now.ToUniversalTime(),
             NumberOfTimeRenewed = 0,
             IsReturned = false
         };
@@ -136,7 +136,7 @@ public class LoanServices(BookishContext context)
 
         LoanMemberModel loanMember = new LoanMemberModel {
                 Id = loan.Id,
-                DateBorrowed = loan.DateBorrowed,
+                DateBorrowed = loan.DateBorrowed.ToUniversalTime(),
                 NumberOfTimeRenewed = loan.NumberOfTimeRenewed,
                 IsReturned = loan.IsReturned,
                 MemberId = memberId,
@@ -149,36 +149,36 @@ public class LoanServices(BookishContext context)
         
     }
 
-    public async Task<Loan> UpdateLoan(memberId, bookId)
-    {
-       List<Loan> memberLoans = GetLoanByMemberId(memberId); 
-       Loan loan = memberLoans.Find(new Loan{BookId = bookId});
-       loan.IsReturned = true;
+    // public async Task<Loan> UpdateLoan(memberId, bookId)
+    // {
+    //    List<Loan> memberLoans = GetLoanByMemberId(memberId); 
+    //    Loan loan = memberLoans.Find(new Loan{BookId = bookId});
+    //    loan.IsReturned = true;
        
-    //    foreach(loan in memberLoans)
-    //    {
-    //     memberLoans.BookId == bookId
-    //    }
-    }
-    public async Task<LoanMemberModel> CheckIn(int memberId, int bookId)
-    { 
-        UpdateLoan(memberId, bookId);
+    // //    foreach(loan in memberLoans)
+    // //    {
+    // //     memberLoans.BookId == bookId
+    // //    }
+    // // }
+    // public async Task<LoanMemberModel> CheckIn(int memberId, int bookId)
+    // { 
+    //     UpdateLoan(memberId, bookId);
 
-        Book book = await _bookservice.UpdateBookCopy(bookId, true);
-        Member member = await _memberservice.GetMemberById(memberId.ToString());
+    //     Book book = await _bookservice.UpdateBookCopy(bookId, true);
+    //     Member member = await _memberservice.GetMemberById(memberId.ToString());
 
-        LoanMemberModel loanMember = new LoanMemberModel {
-                Id = loan.Id,
-                DateBorrowed = loan.DateBorrowed,
-                NumberOfTimeRenewed = loan.NumberOfTimeRenewed,
-                IsReturned = loan.IsReturned,
-                MemberId = memberId,
-                MemberFirstName = member.FirstName,
-                MemberSurname = member.Surname,
-                MemberEmail = member.Email
-        };
+    //     LoanMemberModel loanMember = new LoanMemberModel {
+    //             Id = loan.Id,
+    //             DateBorrowed = loan.DateBorrowed,
+    //             NumberOfTimeRenewed = loan.NumberOfTimeRenewed,
+    //             IsReturned = loan.IsReturned,
+    //             MemberId = memberId,
+    //             MemberFirstName = member.FirstName,
+    //             MemberSurname = member.Surname,
+    //             MemberEmail = member.Email
+    //     };
 
-        return loanMember;
+    //     return loanMember;
         
-    }
+    // }
 } 

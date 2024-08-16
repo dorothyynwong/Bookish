@@ -30,21 +30,28 @@ public class LoanController(BookishContext context) : Controller {
         return View(loanMemberList);
     }
 
-    public async Task<IActionResult> CheckOut([Bind("BookId", "MemberId")] Loan loan)
+    [HttpGet]
+    public IActionResult CheckOut()
+    {
+
+        return View(); 
+    }
+    
+    public async Task<IActionResult> CheckOut([Bind("BookId", "MemberId")] BookMemberModel bookMember)
     {
         if (!ModelState.IsValid)
         {
             return View();
         }
 
-        LoanMemberModel loanMember = await _service.CheckOut(loan.BookId, loan.MemberId);
-        return RedirectToAction("CheckOutSuccess");
+        LoanMemberModel loanMember = await _service.CheckOut(bookMember.BookId, bookMember.MemberId);
+        return View("CheckOutSuccess", loanMember);
     }
 
-    public IActionResult CheckOutSuccess(LoanMemberModel loanMember)
-    {
-        return View(loanMember);
+    // public IActionResult CheckOutSuccess(LoanMemberModel loanMember)
+    // {
+    //     return View(loanMember);
 
-    }
+    // }
 
 }
