@@ -7,22 +7,19 @@ using Bookish.Interfaces;
 
 namespace Bookish.Controllers;
 
-// public class MemberController(ILogger<MemberController> logger, BookishContext context) : Controller
 public class MemberController: Controller
 {
-    // private readonly ILogger<MemberController> _logger = logger;
-    private readonly BookishContext _context;
+
     private readonly IMemberService _service;
 
     public MemberController(BookishContext context, IMemberService service)
     {
-        _context = context;
         _service = service;
     }
 
     public async Task<IActionResult> Index()
     {
-        var members = await _context.Members.ToListAsync();
+        var members = await _service.GetMembers();
         if (members == null)
         {
             return NotFound();

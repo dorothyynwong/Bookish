@@ -7,7 +7,6 @@ namespace Bookish.Services;
 
 public class LoanService: ILoanService
 {
-    // private readonly BookishContext _context = context;
     private readonly BookishContext _context;
     private readonly IBookService _bookService;
     private readonly IMemberService _memberService;
@@ -17,10 +16,6 @@ public class LoanService: ILoanService
         _bookService = bookService;
         _memberService = memberService;
     }
-    
-    // private readonly BookService _bookservice = new(context);
-
-    // private readonly MemberService _memberservice = new(context);
 
     public async Task AddLoan(Loan loan)
     {

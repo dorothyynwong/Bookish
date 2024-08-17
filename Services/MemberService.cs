@@ -1,6 +1,7 @@
 
 using Bookish.Models;
 using Bookish.Interfaces;
+using Microsoft.EntityFrameworkCore;
 namespace Bookish.Services
 {
     public class MemberService : IMemberService
@@ -17,6 +18,11 @@ namespace Bookish.Services
             await _context.Members.AddAsync(member);
 
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<Member>> GetMembers()
+        {
+            return await _context.Members.ToListAsync();
         }
 
         public async Task UpdateMember(Member member)

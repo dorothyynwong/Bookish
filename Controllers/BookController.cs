@@ -5,30 +5,13 @@ using Bookish.Interfaces;
 
 namespace Bookish.Controllers;
 
-// public class BookController(BookishContext context) : Controller {
 public class BookController : Controller {
-    // private readonly ILogger<BookController> _logger;
-    // private readonly BookishContext _context = context;
-    // private readonly BookService _service = new(context);
-    // private readonly IBookService<BookService> _service;
     private readonly IBookService _service;
 
-        // Inject IBookService through the constructor
     public BookController(IBookService bookService)
     {
         _service = bookService;
     }
-
-    // public BookController(ILogger<BookController> logger, BookishContext context)
-
-    // public async Task<IActionResult> Index() {
-    //     var books = await _context.Books.ToListAsync();
-    //     if (books == null)
-    //     {
-    //         return NotFound();
-    //     }
-    //     return View(books);
-    // }
 
     public async Task<IActionResult> Create([Bind("ISBN","BookName", "AuthorFirstName", "AuthorSurname", "NumberOfCopies", "AvailableCopies", "Genre")] BookAuthorModel bookAuthor)
     {

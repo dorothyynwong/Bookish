@@ -6,6 +6,7 @@ namespace Bookish.Interfaces
     {
         Task AddMember(Member member);
         Task UpdateMember(Member member);
+        Task<List<Member>> GetMembers();
         Task<Member?> GetMemberById(string id);
         
 
