@@ -2,13 +2,24 @@ using Microsoft.AspNetCore.Mvc;
 using Bookish.ViewModels;
 using Bookish.Services;
 using Bookish.Models;
+using Bookish.Interfaces;
 
 namespace Bookish.Controllers;
 
-public class LoanController(BookishContext context) : Controller {
+// public class LoanController(BookishContext context) : Controller {
+public class LoanController : Controller{
     // private readonly ILogger<BookController> _logger;
-    private readonly BookishContext _context = context;
-    private readonly LoanServices _service = new(context);
+    // private readonly BookishContext _context = context;
+    // private readonly LoanServices _service = new(context);
+
+    private readonly BookishContext _context;
+    private readonly ILoanService _service;
+
+    public LoanController(BookishContext context, ILoanService loanService)
+    {
+        _context = context;
+        _service = loanService;
+    }
 
     public async Task<IActionResult> BooksBorrowed(string id) 
     {

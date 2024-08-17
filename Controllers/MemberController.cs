@@ -3,16 +3,22 @@ using Microsoft.AspNetCore.Mvc;
 using Bookish.Models;
 using Bookish.Services;
 using Microsoft.EntityFrameworkCore;
+using Bookish.Interfaces;
 
 namespace Bookish.Controllers;
 
 // public class MemberController(ILogger<MemberController> logger, BookishContext context) : Controller
-public class MemberController(BookishContext context) : Controller
+public class MemberController: Controller
 {
     // private readonly ILogger<MemberController> _logger = logger;
-    private readonly BookishContext _context = context;
+    private readonly BookishContext _context;
+    private readonly IMemberService _service;
 
-    private readonly MemberService _service = new(context);
+    public MemberController(BookishContext context, IMemberService service)
+    {
+        _context = context;
+        _service = service;
+    }
 
     public async Task<IActionResult> Index()
     {

@@ -1,17 +1,23 @@
 using Bookish.Models;
 using Bookish.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using Bookish.Interfaces;
+using Bookish;
 
 namespace Bookish.Services
 {
-    public class BookService(BookishContext context)
+    public class BookService: IBookService
     {
-        private readonly BookishContext _context = context;
+        private readonly BookishContext _context;
+        public BookService(BookishContext context)
+        {
+            _context = context;
+        }
 
         public async Task AddBookAuthor(BookAuthorModel bookAuthor)
         {
             int authorId = await GetAuthorIdByName(bookAuthor.AuthorFirstName, bookAuthor.AuthorSurname);
-            
+
             if (authorId == 0)
             {
                 Author author = new()
@@ -19,7 +25,7 @@ namespace Bookish.Services
                     FirstName = bookAuthor.AuthorFirstName,
                     Surname = bookAuthor.AuthorSurname
                 };
-                authorId = await AddAuthor(author);    
+                authorId = await AddAuthor(author);
             }
 
             Book book = new()
@@ -52,7 +58,7 @@ namespace Bookish.Services
         {
             Author? author = await _context.Authors.FirstOrDefaultAsync(author =>
                             author.FirstName == firstName && author.Surname == surname);
-            return author!=null ? author.Id : 0;
+            return author != null ? author.Id : 0;
         }
 
         public async Task<Book> UpdateBookCopy(int id, bool checkOut)
@@ -83,7 +89,7 @@ namespace Bookish.Services
         public async Task UpdateBook(BookAuthorModel bookAuthor)
         {
             int authorId = await GetAuthorIdByName(bookAuthor.AuthorFirstName, bookAuthor.AuthorSurname);
-            
+
             if (authorId == 0)
             {
                 Author author = new()
@@ -91,7 +97,7 @@ namespace Bookish.Services
                     FirstName = bookAuthor.AuthorFirstName,
                     Surname = bookAuthor.AuthorSurname
                 };
-                authorId = await AddAuthor(author);    
+                authorId = await AddAuthor(author);
             }
 
             Book book = new()
@@ -132,7 +138,8 @@ namespace Bookish.Services
                     };
                     return bookAuthor;
 
-                } else return null;
+                }
+                else return null;
 
             }
             else return null;
@@ -142,13 +149,13 @@ namespace Bookish.Services
         {
             List<BookAuthorModel> bookAuthorList = [];
             IQueryable<Book> query = _context.Books; // SELECT * FROM Books;  
-            switch(filterType)
+            switch (filterType)
             {
                 case "genre":
                     query = query.Where(book => book.Genre.ToLower() == filterValue); // WHERE Genre = "Fantasy"
                     break;
                 case "bookname":
-                    query = query.Where(book => book.BookName.ToLower().Contains(filterValue!=null?filterValue:"")); // WHERE Genre = "Fantasy"
+                    query = query.Where(book => book.BookName.ToLower().Contains(filterValue != null ? filterValue : "")); // WHERE Genre = "Fantasy"
                     break;
                 case "author": //LINQ Methods
                     var authorQuery = _context.Books.Join(_context.Authors,
@@ -166,14 +173,14 @@ namespace Bookish.Services
                             AvailableCopies = book.AvailableCopies,
                             Genre = book.Genre
                         })
-                        .Where(book => (book.AuthorFirstName.ToLower()+" "+book.AuthorSurname.ToLower()).Contains(filterValue!=null?filterValue:""))
+                        .Where(book => (book.AuthorFirstName.ToLower() + " " + book.AuthorSurname.ToLower()).Contains(filterValue != null ? filterValue : ""))
                         .OrderBy(book => book.BookName);
-                        return await authorQuery.ToListAsync();
+                    return await authorQuery.ToListAsync();
                 // case "authortest": //LINQ Query
                 // 	var bookAuthors = await (from book in _context.Books
-				// 	   join author in _context.Authors on book.AuthorId equals author.Id
-				// 	   where author.FirstName == filterValue
-				// 	   select new BookAuthorModel{
+                // 	   join author in _context.Authors on book.AuthorId equals author.Id
+                // 	   where author.FirstName == filterValue
+                // 	   select new BookAuthorModel{
                 //             Id = book.Id,
                 //             ISBN = book.ISBN,
                 //             BookName = book.BookName,
@@ -184,9 +191,9 @@ namespace Bookish.Services
                 //             AvailableCopies = book.AvailableCopies,
                 //             Genre = book.Genre
                 //        })
-				// 	  .AsNoTracking()
-				// 	  .ToListAsync(); 
-                    
+                // 	  .AsNoTracking()
+                // 	  .ToListAsync(); 
+
                 //     return bookAuthors;
                 default:
                     break;
@@ -220,12 +227,12 @@ namespace Bookish.Services
 
             return bookAuthorList;
         }
-    public async Task<Book?> GetBookByBookId(int id)
-    {
+        public async Task<Book?> GetBookByBookId(int id)
+        {
             return await _context.Books.FindAsync(id);
-    }
+        }
 
     }
 
-    
-}   
+
+}

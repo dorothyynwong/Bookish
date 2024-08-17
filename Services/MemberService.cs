@@ -1,10 +1,16 @@
 
 using Bookish.Models;
+using Bookish.Interfaces;
 namespace Bookish.Services
 {
-    public class MemberService(BookishContext context)
+    public class MemberService : IMemberService
     {
-        private readonly BookishContext _context = context;
+        private readonly BookishContext _context;
+
+        public MemberService(BookishContext context)
+        {
+            _context = context;
+        }
 
         public async Task AddMember(Member member)
         {

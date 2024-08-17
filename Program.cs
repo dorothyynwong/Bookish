@@ -1,13 +1,15 @@
 using Bookish.Models;
 using Bookish;
 using Microsoft.EntityFrameworkCore;
+using Bookish.Services;
+using Bookish.Interfaces;
 
 // using (var context = new BookishContext())
 // {
 //     context.Database.EnsureCreated();
 
 //     var author1 = new Author() {FirstName = "John", Surname = "Smith"};
-    
+
 //     context.Authors.Add(author1);
 
 //     context.SaveChanges();
@@ -19,15 +21,23 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// builder.Services.AddDbContext<BookishContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddDbContext<BookishContext>();
+builder.Services.AddDbContext<BookishContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+// builder.Services.AddDbContext<BookishContext>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<IBookService, BookService>();
+builder.Services.AddScoped<IMemberService, MemberService>();
+builder.Services.AddScoped<ILoanService, LoanService>();
 
 var app = builder.Build();
-using (var context = new BookishContext())
+// using (var context = new BookishContext())
+// {
+//     context.Database.EnsureCreated();
+// }
+using (var scope = app.Services.CreateScope())
 {
+    var context = scope.ServiceProvider.GetRequiredService<BookishContext>();
     context.Database.EnsureCreated();
 }
 

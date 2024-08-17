@@ -1,16 +1,26 @@
 using Bookish.Models;
 using Bookish.ViewModels;
+using Bookish.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bookish.Services;
 
-public class LoanServices(BookishContext context)
+public class LoanService: ILoanService
 {
-    private readonly BookishContext _context = context;
+    // private readonly BookishContext _context = context;
+    private readonly BookishContext _context;
+    private readonly IBookService _bookService;
+    private readonly IMemberService _memberService;
+    public LoanService(BookishContext context, IBookService bookService, IMemberService memberService) 
+    {
+        _context = context;
+        _bookService = bookService;
+        _memberService = memberService;
+    }
     
-    private readonly BookService _bookservice = new(context);
+    // private readonly BookService _bookservice = new(context);
 
-    private readonly MemberService _memberservice = new(context);
+    // private readonly MemberService _memberservice = new(context);
 
     public async Task AddLoan(Loan loan)
     {
@@ -54,7 +64,7 @@ public class LoanServices(BookishContext context)
         List<LoanBookModel> loanBookList = [];
         foreach(Loan loan in loans)
         {
-            Book? book = await _bookservice.GetBookByBookId(loan.BookId);
+            Book? book = await _bookService.GetBookByBookId(loan.BookId);
             LoanBookModel loanBook = new LoanBookModel{
                 Id = loan.Id,
                 BookId = book.Id,
@@ -103,7 +113,7 @@ public class LoanServices(BookishContext context)
         List<LoanMemberModel> loanMemberList = [];
         foreach(Loan loan in loans)
         {
-            Member? member = await _memberservice.GetMemberById(loan.MemberId.ToString());
+            Member? member = await _memberService.GetMemberById(loan.MemberId.ToString());
             LoanMemberModel loanMember = new LoanMemberModel{
                 Id = loan.Id,
                 DateBorrowed = loan.DateBorrowed.ToUniversalTime(),
@@ -131,8 +141,8 @@ public class LoanServices(BookishContext context)
         };
         await AddLoan(loan);
 
-        Book book = await _bookservice.UpdateBookCopy(bookId, true);
-        Member member = await _memberservice.GetMemberById(memberId.ToString());
+        Book book = await _bookService.UpdateBookCopy(bookId, true);
+        Member member = await _memberService.GetMemberById(memberId.ToString());
 
         LoanMemberModel loanMember = new LoanMemberModel {
                 Id = loan.Id,
